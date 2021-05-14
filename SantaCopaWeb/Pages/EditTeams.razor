@@ -1,0 +1,54 @@
+﻿<h3>EditTeams</h3>
+
+@page "/editTeams/{id:int}"
+@inject ITeamsService teamsService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control"
+                       @bind-value="@team.Name" />
+                <label for="City" class="control-label">Time</label>
+                <input for="City" class="form-control"
+                       @bind-value="@team.Category" />
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary"
+                        @onclick="() => UpdateTeam()">
+                    Save
+                </button>
+                <button type="button" class="btn btn-warning"
+                        @onclick="() => cancel()">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code  {
+
+    [Parameter]
+    public int id { get; set; }
+
+    Teams team = new Teams();
+
+    protected override async Task OnInitializedAsync()
+    {
+        team = await teamsService.GetById(id);
+    }
+
+    protected async Task UpdateTeam()
+    {
+        await teamsService.Update(team);
+        navigationManager.NavigateTo("/teamslist");
+    }
+
+    void cancel()
+    {
+        navigationManager.NavigateTo("/teamslist");
+    }
+}
